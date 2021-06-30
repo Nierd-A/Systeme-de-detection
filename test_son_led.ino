@@ -25,8 +25,12 @@
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
-  pinMode(11, OUTPUT);
-  pinMode(5, INPUT);
+  pinMode(11, OUTPUT); //rouge
+  pinMode(10, OUTPUT); //jaune
+  pinMode(5, INPUT);  //capteur de son
+  pinMode(0, INPUT); //RX
+  pinMode(1, OUTPUT);//TX
+
 }
 
 // the loop function runs over and over again forever
@@ -34,8 +38,18 @@ void loop() {
   int val = digitalRead(5);
   if(val == 0) {
     digitalWrite(11, HIGH);
+    digitalWrite(1, HIGH);
   } else {
     digitalWrite(11, LOW);
+    digitalWrite(1, LOW);
+  }
+
+  int rx = digitalRead(0);
+  if(rx == 0) {
+    digitalWrite(10,HIGH);
+    delay(5000);
+  } else {
+    digitalWrite(10,LOW);
   }
 
   //digitalWrite(11, HIGH);   // turn the LED on (HIGH is the voltage level)
