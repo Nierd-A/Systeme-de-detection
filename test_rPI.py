@@ -7,12 +7,16 @@ TX = 14
 PX = 20
 GPIO.setup(RX, GPIO.IN)
 GPIO.setup(TX, GPIO.OUT)
+#GPIO.setup(PX, GPIO.IN)
 
+#print(GPIO.input(PX))
 try:
     print("PIR Module Test")
     print(" (CTRL+C to exit)")
     time.sleep(2)
     print "Ready"
+    GPIO.output(TX, 0)
+    time.sleep(0.5)
     GPIO.output(TX, 1)
 
     while True:
