@@ -21,7 +21,6 @@ try:
 			GPIO.output(TX, 0)
 			time.sleep(0.1)
 			GPIO.output(TX, 1)
-		msgNano = nanoReading()
 		if GPIO.input(RX):
 			messageHandler("Sound detected")
 			
