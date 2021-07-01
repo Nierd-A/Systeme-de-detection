@@ -1,6 +1,8 @@
 import time
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)
+
 RX = 15 #reciever
 TX = 14 #transmitter
 PX = 20 #sensor
@@ -19,6 +21,7 @@ try:
 			GPIO.output(TX, 0)
 			time.sleep(0.1)
 			GPIO.output(TX, 1)
+		msgNano = nanoReading()
 		if GPIO.input(RX):
 			messageHandler("Sound detected")
 			
