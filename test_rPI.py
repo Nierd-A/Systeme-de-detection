@@ -4,9 +4,11 @@ import time
 GPIO.setmode(GPIO.BCM)
 RX = 15
 TX = 14
+PX = 20
 
 GPIO.setup(RX, GPIO.IN)
 GPIO.setup(TX, GPIO.OUT)
+GPIO.setup(PX, GPIO.IN)
 try:
     print("PIR Module Test")
     print(" (CTRL+C to exit)")
@@ -19,6 +21,8 @@ try:
     while True:
         if GPIO.input(RX):
             print("arduino detected")
+        if not GPIO.input(PX):
+            print("Presence detectee")
         time.sleep(1)
 except KeyboardInterrupt:
     print("Quitting")
