@@ -35,3 +35,4 @@ try:
 		
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
+	GPIO.cleanup()
