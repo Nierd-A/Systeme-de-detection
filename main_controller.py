@@ -28,7 +28,7 @@ try:
 			GPIO.output(TX, 0)
 			time.sleep(0.1)
 			GPIO.output(TX, 1)
-		if GPIO.input(RX):
+		if GPIO.input(RX) == 0:
 			messageHandler("Sound detected")
 			
 		time.sleep(0.1) #wait for arduino to answer
