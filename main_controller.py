@@ -1,6 +1,13 @@
 import time
 import RPi.GPIO as GPIO
 
+def printLog(msgLog):
+	print(msgLog)
+	
+def messageHandler(msgNano):
+	printLog(msgNano)
+
+#MAIN
 GPIO.setmode(GPIO.BCM)
 
 RX = 15 #reciever
@@ -28,9 +35,3 @@ try:
 		
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
-				
-def printLog(msgLog):
-	print(msgLog)
-	
-def messageHandler(msgNano):
-	printLog(msgNano)
