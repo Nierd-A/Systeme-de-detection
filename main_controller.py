@@ -38,8 +38,7 @@ try:
         	elif ( GPIO.input(PX) == 1 & start != -1 ):
             		end = time.time()
             		fichier = open("log.txt", "a")
-            		fichier.write("\nPresence detectee pendant une duree de " + ( end - start) " secondes, le " strftime(%Y-%m-%d, datetime.now())" à " strftime(%H:%M:%S, datetime.now())
-            		fichier.close()
+            		fichier.write("\nPresence detectee pendant une duree de " + ( end - start) + " secondes, le " + strftime(%Y-%m-%d, datetime.now()) + " a " + strftime(%H:%M:%S, datetime.now())
 			start =	-1
         	if GPIO.input(RX) == 0:
             		messageHandler("Sound detected")
@@ -47,11 +46,13 @@ try:
         	elif ( GPIO.input(RX) == 1 & start != -1 ):
             		end = time.time()
             		fichier = open("log.txt", "a")
-            		fichier.write("\nBruit détecté pendant une durée de " end - start " secondes, le " strftime(%Y-%m-%d, datetime.now())" à " strftime(%H:%M:%S, datetime.now())
-            		fichier.close()
+            		fichier.write("\nBruit detecte pendant une duree de " + (end - start) + " secondes, le " + strftime(%Y-%m-%d, datetime.now()) + " à " + strftime(%H:%M:%S, datetime.now())
 			start = -1
             		time.sleep(0.1) #wait for arduino to answer
+    fichier.close()
 		
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
 	GPIO.cleanup()
+    
+fichier.close()
