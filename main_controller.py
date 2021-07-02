@@ -30,25 +30,27 @@ try:
 	while True:
 		#Sensor reading, 0 = detection
 		if GPIO.input(PX) == 0:
-            start = time.time()
-            print("Capteur de proximite detecte")
+           		start = time.time()
+            		print("Capteur de proximite detecte")
 			GPIO.output(TX, 0)
 			time.sleep(0.1)
 			GPIO.output(TX, 1)
-        else if ( GPIO.input(PX) == 1 & start != -1 ):
-            end = time.time()
-            fichier = open("log.txt", "a")
-            fichier.write("\nPrésence détectée pendant une durée de " end - start " secondes, le " strftime(%Y-%m-%d, datetime.now())" à " strftime(%H:%M:%S, datetime.now())
-            fichier.close()
-        if GPIO.input(RX) == 0:
-            messageHandler("Sound detected")
-            start = time.time()
-        else if ( GPIO.input(RX) == 1 & start != -1 ):
-            end = time.time()
-            fichier = open("log.txt", "a")
-            fichier.write("\nBruit détecté pendant une durée de " end - start " secondes, le " strftime(%Y-%m-%d, datetime.now())" à " strftime(%H:%M:%S, datetime.now())
-            fichier.close()
-            time.sleep(0.1) #wait for arduino to answer
+        	elif ( GPIO.input(PX) == 1 & start != -1 ):
+            		end = time.time()
+            		fichier = open("log.txt", "a")
+            		fichier.write("\nPresence detectee pendant une duree de " + ( end - start) " secondes, le " strftime(%Y-%m-%d, datetime.now())" à " strftime(%H:%M:%S, datetime.now())
+            		fichier.close()
+			start =	-1
+        	if GPIO.input(RX) == 0:
+            		messageHandler("Sound detected")
+            		start = time.time()
+        	elif ( GPIO.input(RX) == 1 & start != -1 ):
+            		end = time.time()
+            		fichier = open("log.txt", "a")
+            		fichier.write("\nBruit détecté pendant une durée de " end - start " secondes, le " strftime(%Y-%m-%d, datetime.now())" à " strftime(%H:%M:%S, datetime.now())
+            		fichier.close()
+			start = -1
+            		time.sleep(0.1) #wait for arduino to answer
 		
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
