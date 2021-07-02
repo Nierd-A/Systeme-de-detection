@@ -88,6 +88,7 @@ void loop() {
     }
     // On informe au RPi que un son se produit
     digitalWrite(TX, HIGH);
+    digitalWrite(TX, LOW);
     for(int cmp=0; cmp < 5;cmp++) {
     // Leds rouges et vertes clignotes
     digitalWrite(led_V1, LOW);
@@ -101,6 +102,7 @@ void loop() {
     digitalWrite(led_V2, HIGH);
     delay (300);
     }
+    
   }
     
 
