@@ -1,8 +1,8 @@
 import time
+import math
 import RPi.GPIO as GPIO
 from time import strftime
 import datetime
-now = datetime.datetime.now()
 
 def printLog(msgLog):
 	print(msgLog)
@@ -32,29 +32,31 @@ try:
 	while True:
 		#Sensor reading, 0 = detection
 		if GPIO.input(PX) == 0:
-           		start = time.time()
+                        if start == -1:
+           		     start = time.time()
             		print("Capteur de proximite detecte")
 			GPIO.output(TX, 0)
 			time.sleep(0.1)
 			GPIO.output(TX, 1)
-        	elif ( GPIO.input(PX) == 1 & start != -1 ):
+        	elif ( GPIO.input(PX) == 1 and start != -1 ):
             		end = time.time()
             		fichier = open("log.txt", "a")
-            		fichier.write("\n" + now.strftime("%d/%m/%Y %H:%M:%S ") + "Presence detectee pendant une duree de " +(end - start) + " secondes")
+            		fichier.write("\n" + datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S ") + "Presence detectee pendant une duree de " + str(round(float(end - start),2)) + " secondes")
+
+                        fichier.close()
 			start =	-1
-        	if GPIO.input(RX) == 0:
+        	if GPIO.input(RX) == 1:
             		messageHandler("Sound detected")
-            		start = time.time()
-        	elif ( GPIO.input(RX) == 1 & start != -1 ):
+                        if start == -1:
+              		    start = time.time()
+        	elif ( GPIO.input(RX) == 0 and start != -1 ):
             		end = time.time()
             		fichier = open("log.txt", "a")
-            		                    fichier.write("\n" + now.strftime("%d/%m/%Y %H:%M:%S ") + "Presence detectee pendant une duree de " + (end - start) + " secondes")
+            		fichier.write("\n" + datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S ") + "Presence detectee pendant une duree de " + str(round(float(end - start),2)) + " secondes")
 			start = -1
-                    time.sleep(0.1) #wait for arduino to answer
-    fichier.close()
+                        fichier.close()
 		
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
 	GPIO.cleanup()
     
-fichier.close()
