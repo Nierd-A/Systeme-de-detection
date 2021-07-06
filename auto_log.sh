@@ -3,9 +3,11 @@
 #test presence du fichier
 if [ ! -f log.txt ]
 then 
-    echo nok
+    exit 0 #rien a faire 
 fi
-#test modification du fichier
+#deplacement dans la branche de commit ?
+
+#test modification du fichier ?
 
 #test commit des logs
 
