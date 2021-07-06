@@ -32,31 +32,40 @@ try:
 	while True:
 		#Sensor reading, 0 = detection
 		if GPIO.input(PX) == 0:
-                        if start == -1:
-           		     start = time.time()
-            		print("Capteur de proximite detecte")
-			GPIO.output(TX, 0)
-			time.sleep(0.1)
-			GPIO.output(TX, 1)
-        	elif ( GPIO.input(PX) == 1 and start != -1 ):
-            		end = time.time()
-            		fichier = open("log.txt", "a")
-            		fichier.write("\n" + datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S ") + "Presence detectee pendant une duree de " + str(round(float(end - start),2)) + " secondes")
-
-                        fichier.close()
-			start =	-1
-        	if GPIO.input(RX) == 1:
-            		messageHandler("Sound detected")
-                        if start == -1:
-              		    start = time.time()
-        	elif ( GPIO.input(RX) == 0 and start != -1 ):
-            		end = time.time()
-            		fichier = open("log.txt", "a")
-            		fichier.write("\n" + datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S ") + "Presence detectee pendant une duree de " + str(round(float(end - start),2)) + " secondes")
-			start = -1
-                        fichier.close()
+            capteur_presence()
+            
+        if GPIO.input(RX) == 1:
+            capteur_son()
+                        
 		
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
 	GPIO.cleanup()
+ 
+ 
     
+def capteur_presence():
+    if start == -1:
+        start = time.time()
+        print("Capteur de proximite detecte")
+        GPIO.output(TX, 0)
+        time.sleep(0.1)
+    elif ( GPIO.input(PX) == 1 and start != -1 ):
+        GPIO.output(TX, 1)
+        end = time.time()
+        ecriture_log ('Presence détectee')
+        
+def capteur_son ():
+    if start == -1:
+        start = time.time()
+    elif ( GPIO.input(RX) == 0 and start != -1 ):
+        end = time.time()
+        ecriture_log('Bruit detecte')
+        start = -1
+
+    
+def ecriture_log (detection):
+
+    fichier = open("log.txt", "a")
+    fichier.write("\n" + datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S ") + str(detection) + " pendant une duree de " + str(round(float(end - start),2)) + " secondes")
+    fichier.close()
