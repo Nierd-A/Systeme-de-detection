@@ -1,4 +1,11 @@
 #!/bin/bash
+#################
+# setup_auto_log.sh
+# script de setup de la crontab pour le lancement automatique du script de sauvegarde des logs
+#
+# sans option -> setup de la crontab
+# option '-r' -> suppression de la crontab
+#################
 
 #WARNING : chemin du script en absolu ! 
 #Evolution : choix de la frequence d'enregistrement par l'utilisateur

@@ -1,4 +1,9 @@
 #!/bin/bash
+###################
+# auto_log.sh
+# script de commit et push automatique des logs
+# WARNING : necessite de ne pas avoir à entrer ses informations de connexions github (ssh, stockage locale,...)
+###################
 
 #WARNING : PATH du dossier git en absolu !
 git_path="/home/pi/Desktop/projet/Systeme-de-detection"
