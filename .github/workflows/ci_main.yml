@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   test_capteur:
     # The type of runner that the job will run on
-    runs-on: ARM64
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,4 +27,6 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: python test_main_controller.py
+        run: |
+          pip install RPi.GPIO
+          python test_main_controller.py
