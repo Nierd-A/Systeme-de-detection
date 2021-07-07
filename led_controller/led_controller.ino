@@ -11,7 +11,10 @@ int RX = 0;
 int TX = 1; 
 
 //variable de récupération des broches input
-int val_Capt_Son, val_RX;
+int val_Capt_Son, val_RX, old_Capt_Son, old_RX;
+
+//variable lié au temps d'écoute des broches
+int temporisation;
 
 void setup() {
   // initialisation des leds et des broches de capteurs
@@ -28,16 +31,27 @@ void setup() {
   //input
   pinMode(capt_Son, INPUT);  //capteur de son
   pinMode(RX, INPUT); //RX : Capteur de presence
- 
 
+  //initialisation des variables d'écoutes
+  val_Capt_Son = 1;
+  val_RX = 1;
 }
 
 // Boucle d'écoute des événements
 void loop() {
-  //écoute des broches input
-  val_Capt_Son = digitalRead(capt_Son);
-  val_RX = digitalRead(RX);
-
+  //écoute des broches input pendant 500 millisecondes 
+  //OU tant qu'un capteur ne change pas de valeur
+  temporisation = 0;
+  old_Capt_Son = val_Capt_Son;
+  old_RX = val_RX;
+  while(temporisation < 500 && old_Capt_Son == val_Capt_Son && old_RX == val_RX) {
+    //lecture des broches toutes les 10 millisecondes
+    val_Capt_Son = digitalRead(capt_Son);
+    val_RX = digitalRead(RX);
+    delay(10);
+    temporisation += 10;
+  }
+  
   //action selon les broches
   if (val_RX == 0)
   {
@@ -145,7 +159,4 @@ void sequence_attente(){
     delay (50) ; // durée du flash 50 millisecondes
     digitalWrite (i, LOW) ; // éteint la DEL
   }
- 
-  // délai de 500 millisecondes
-  delay (500) ;
 }
