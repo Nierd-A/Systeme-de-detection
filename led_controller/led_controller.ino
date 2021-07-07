@@ -1,3 +1,5 @@
+//déclaration des variables
+//variables liées aux broches
 int led_R1 = 12;
 int led_R2 = 11;
 int led_J1 = 10;
@@ -5,13 +7,16 @@ int led_J2 = 9;
 int led_V1 = 8;
 int led_V2 = 7;
 int capt_Son = 5;
-int RX = 0;  //Reciever
-int TX = 1;  //Transmitter
+int RX = 0;  
+int TX = 1; 
+
+//variable de récupération des broches input
+int val_Capt_Son, val_RX;
 
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
+  // initialisation des leds et des broches de capteurs
 
-
+  //output
   pinMode(led_R1, OUTPUT); //rouge
   pinMode(led_R2, OUTPUT);
   pinMode(led_J1, OUTPUT); //jaune
@@ -19,18 +24,21 @@ void setup() {
   pinMode(led_V1, OUTPUT); //vert
   pinMode(led_V2, OUTPUT);
   pinMode(TX, OUTPUT);//TX
-  
+
+  //input
   pinMode(capt_Son, INPUT);  //capteur de son
   pinMode(RX, INPUT); //RX : Capteur de presence
  
 
 }
 
-// the loop function runs over and over again forever
+// Boucle d'écoute des événements
 void loop() {
-  int val_Capt_Son = digitalRead(capt_Son);
-  int val_RX = digitalRead(RX);
+  //écoute des broches input
+  val_Capt_Son = digitalRead(capt_Son);
+  val_RX = digitalRead(RX);
 
+  //action selon les broches
   if (val_RX == 0)
   {
     sequence_presence();      
