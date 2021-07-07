@@ -54,16 +54,21 @@ void loop() {
   }
 }
 
-//Fonction de sequence de led dédié au capteur de presence
-void sequence_presence() {
-  // Extinction de toutes les DEL au départ du programme
+// Extinction de toutes les DEL
+void extinction() {  
   for (byte i = 7 ; i <= 12 ; i++) {
     digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
   }
+}
+
+// Fonction de sequence de led dédié au capteur de presence
+// Les durées ont été imposées et sont calculées selon
+// -> la somme des délais d'une boucle * le nombre de boucle
+void sequence_presence() {
+  extinction();
   
   // 5 seconde de clignotement leds jaunes
-  for (int cmp = 0 ; cmp < 10 ; cmp++){
-      
+  for (int cmp = 0 ; cmp < 10 ; cmp++){      
       digitalWrite(led_J1, HIGH);
       digitalWrite(led_J2, HIGH);
       delay (250);
@@ -72,6 +77,7 @@ void sequence_presence() {
       delay (250);
   }
   // 5 seconde de clignotement leds verte et rouge avec 2 seconde d'intervalle
+  //durée = 2 secondes
   for (int cmp = 0 ; cmp < 4 ; cmp++){
       
       digitalWrite(led_V1, HIGH);
@@ -81,6 +87,7 @@ void sequence_presence() {
       digitalWrite(led_V2, LOW);
       delay (250);
   }
+  //durée = 2 secondes
   for (int cmp = 0 ; cmp < 4 ; cmp++){
       
       digitalWrite(led_R1, HIGH);
@@ -90,6 +97,7 @@ void sequence_presence() {
       digitalWrite(led_R2, LOW);
       delay (250);
   }
+  //durée = 1 secondes
   for (int cmp = 0 ; cmp < 2 ; cmp++){
       
       digitalWrite(led_V1, HIGH);
@@ -103,37 +111,33 @@ void sequence_presence() {
 
 //Fonction de sequence de led dédié au capteur de son
 void sequence_son() {
-  // Extinction de toutes les DEL au départ du programme
-  for (byte i = 7 ; i <= 12 ; i++) {
-      digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
-  }
-  // On informe au RPi que un son se produit
+  extinction();
+  
+  // On informe au RPi qu'un son se produit
   digitalWrite(TX, HIGH);
-  for(int cmp=0; cmp < 5;cmp++) {
+  
+  //Clignotement de 2 secondes
+  for(int cmp=0; cmp < 4;cmp++) {
   // Leds rouges et vertes clignotes
   digitalWrite(led_V1, LOW);
   digitalWrite(led_V2, LOW);
   digitalWrite(led_R1, HIGH);
   digitalWrite(led_R2, HIGH);
-  delay (300);
+  delay (250);
   digitalWrite(led_R1, LOW);
   digitalWrite(led_R2, LOW);
   digitalWrite(led_V1, HIGH);
   digitalWrite(led_V2, HIGH);
-  delay (300);
+  delay (250);
   
   }
+  //On informe au RPi qu'il n'y a plus de son
   digitalWrite(TX, LOW);
 }
 
 //Fonction de sequence de led dédié à l'attente d'événements
-void sequence_attente(){
-  //On informe au RPi qu'il n'y a plus de son
-  digitalWrite(TX, LOW);
-  // Extinction de toutes les DEL au départ du programme
-  for (byte i = 7 ; i <= 12 ; i++) {
-    digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
-  }
+void sequence_attente(){  
+  extinction();
  
   // Boucle pour faire flasher les DEL
   for (byte i = 7 ; i <= 12 ; i++) {
@@ -144,6 +148,4 @@ void sequence_attente(){
  
   // délai de 500 millisecondes
   delay (500) ;
- 
-  // Recommence la séquence
 }
