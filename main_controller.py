@@ -21,30 +21,27 @@ def capteur_presence(GPIO_PX,start):
     if GPIO_PX == 0:
         if start == -1:
             start = time.time()
-        print("Capteur de proximite detecte")
+       	    print("Capteur de proximite detecte")
         GPIO.output(TX, 0)
         time.sleep(0.1)
         GPIO.output(TX, 1)
-        return start
     elif ( GPIO_PX == 1 and start != -1 ):
         end = time.time()
         ecriture_log('Presence detectee',start,end)
-	print("capteur plus detecte")
 	start = -1
-        return start
+    return start
 
 def capteur_son (GPIO_RX,start):
     #Sensor reading, 1 = detection
     if GPIO_RX == 1:
         if start == -1:
             start = time.time()
-	print("son detecte")
-        return start
+	    print("son detecte")
     elif ( GPIO_RX == 0 and start != -1 ):
         end = time.time()
         ecriture_log('Bruit detecte',start,end)
 	start = -1
-        return start
+    return start
 
 def printLog(msgLog):
 	print(msgLog)
