@@ -5,8 +5,8 @@ int led_J2 = 9;
 int led_V1 = 8;
 int led_V2 = 7;
 int capt_Son = 5;
-int RX = 0;
-int TX = 1;
+int RX = 0;  //Reciever
+int TX = 1;  //Transmitter
 
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
@@ -33,98 +33,109 @@ void loop() {
 
   if (val_RX == 0)
   {
-      // Extinction de toutes les DEL au départ du programme
-      for (byte i = 7 ; i <= 12 ; i++) {
-        digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
-      }
-      
-      // 5 seconde de clignotement leds jaunes
-      for (int cmp = 0 ; cmp < 10 ; cmp++){
-          
-          digitalWrite(led_J1, HIGH);
-          digitalWrite(led_J2, HIGH);
-          delay (250);
-          digitalWrite(led_J1, LOW);
-          digitalWrite(led_J2, LOW);
-          delay (250);
-      }
-      // 5 seconde de clignotement leds verte et rouge avec 2 seconde d'intervalle
-      for (int cmp = 0 ; cmp < 4 ; cmp++){
-          
-          digitalWrite(led_V1, HIGH);
-          digitalWrite(led_V2, HIGH);
-          delay (250);
-          digitalWrite(led_V1, LOW);
-          digitalWrite(led_V2, LOW);
-          delay (250);
-      }
-      for (int cmp = 0 ; cmp < 4 ; cmp++){
-          
-          digitalWrite(led_R1, HIGH);
-          digitalWrite(led_R2, HIGH);
-          delay (250);
-          digitalWrite(led_R1, LOW);
-          digitalWrite(led_R2, LOW);
-          delay (250);
-      }
-      for (int cmp = 0 ; cmp < 2 ; cmp++){
-          
-          digitalWrite(led_V1, HIGH);
-          digitalWrite(led_V2, HIGH);
-          delay (250);
-          digitalWrite(led_V1, LOW);
-          digitalWrite(led_V2, LOW);
-          delay (250);
-      }
-      
-  }
-  
+    sequence_presence();      
+  }  
 
   else if (val_Capt_Son == 0)
   {
-    // Extinction de toutes les DEL au départ du programme
-    for (byte i = 7 ; i <= 12 ; i++) {
-        digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
-    }
-    // On informe au RPi que un son se produit
-    digitalWrite(TX, HIGH);
-    for(int cmp=0; cmp < 5;cmp++) {
-    // Leds rouges et vertes clignotes
-    digitalWrite(led_V1, LOW);
-    digitalWrite(led_V2, LOW);
-    digitalWrite(led_R1, HIGH);
-    digitalWrite(led_R2, HIGH);
-    delay (300);
-    digitalWrite(led_R1, LOW);
-    digitalWrite(led_R2, LOW);
-    digitalWrite(led_V1, HIGH);
-    digitalWrite(led_V2, HIGH);
-    delay (300);
-    
-    }
-    digitalWrite(TX, LOW);
-  }
-    
+    sequence_son();    
+  }    
 
   else {
-      //On informe au RPi qu'il n'y a plus de son
-      digitalWrite(TX, LOW);
-      // Extinction de toutes les DEL au départ du programme
-      for (byte i = 7 ; i <= 12 ; i++) {
-        digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
-      }
-     
-      // Boucle pour faire flasher les DEL
-      for (byte i = 7 ; i <= 12 ; i++) {
-        digitalWrite (i, HIGH) ; // allume la DEL sur broche i
-        delay (50) ; // durée du flash 50 millisecondes
-        digitalWrite (i, LOW) ; // éteint la DEL
-      }
-     
-      // délai de 500 millisecondes
-      delay (500) ;
-     
-      // Recommence la séquence
-    
+    sequence_attente();    
   }
+}
+
+//Fonction de sequence de led dédié au capteur de presence
+void sequence_presence() {
+  // Extinction de toutes les DEL au départ du programme
+  for (byte i = 7 ; i <= 12 ; i++) {
+    digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
+  }
+  
+  // 5 seconde de clignotement leds jaunes
+  for (int cmp = 0 ; cmp < 10 ; cmp++){
+      
+      digitalWrite(led_J1, HIGH);
+      digitalWrite(led_J2, HIGH);
+      delay (250);
+      digitalWrite(led_J1, LOW);
+      digitalWrite(led_J2, LOW);
+      delay (250);
+  }
+  // 5 seconde de clignotement leds verte et rouge avec 2 seconde d'intervalle
+  for (int cmp = 0 ; cmp < 4 ; cmp++){
+      
+      digitalWrite(led_V1, HIGH);
+      digitalWrite(led_V2, HIGH);
+      delay (250);
+      digitalWrite(led_V1, LOW);
+      digitalWrite(led_V2, LOW);
+      delay (250);
+  }
+  for (int cmp = 0 ; cmp < 4 ; cmp++){
+      
+      digitalWrite(led_R1, HIGH);
+      digitalWrite(led_R2, HIGH);
+      delay (250);
+      digitalWrite(led_R1, LOW);
+      digitalWrite(led_R2, LOW);
+      delay (250);
+  }
+  for (int cmp = 0 ; cmp < 2 ; cmp++){
+      
+      digitalWrite(led_V1, HIGH);
+      digitalWrite(led_V2, HIGH);
+      delay (250);
+      digitalWrite(led_V1, LOW);
+      digitalWrite(led_V2, LOW);
+      delay (250);
+  }
+}
+
+//Fonction de sequence de led dédié au capteur de son
+void sequence_son() {
+  // Extinction de toutes les DEL au départ du programme
+  for (byte i = 7 ; i <= 12 ; i++) {
+      digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
+  }
+  // On informe au RPi que un son se produit
+  digitalWrite(TX, HIGH);
+  for(int cmp=0; cmp < 5;cmp++) {
+  // Leds rouges et vertes clignotes
+  digitalWrite(led_V1, LOW);
+  digitalWrite(led_V2, LOW);
+  digitalWrite(led_R1, HIGH);
+  digitalWrite(led_R2, HIGH);
+  delay (300);
+  digitalWrite(led_R1, LOW);
+  digitalWrite(led_R2, LOW);
+  digitalWrite(led_V1, HIGH);
+  digitalWrite(led_V2, HIGH);
+  delay (300);
+  
+  }
+  digitalWrite(TX, LOW);
+}
+
+//Fonction de sequence de led dédié à l'attente d'événements
+void sequence_attente(){
+  //On informe au RPi qu'il n'y a plus de son
+  digitalWrite(TX, LOW);
+  // Extinction de toutes les DEL au départ du programme
+  for (byte i = 7 ; i <= 12 ; i++) {
+    digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
+  }
+ 
+  // Boucle pour faire flasher les DEL
+  for (byte i = 7 ; i <= 12 ; i++) {
+    digitalWrite (i, HIGH) ; // allume la DEL sur broche i
+    delay (50) ; // durée du flash 50 millisecondes
+    digitalWrite (i, LOW) ; // éteint la DEL
+  }
+ 
+  // délai de 500 millisecondes
+  delay (500) ;
+ 
+  // Recommence la séquence
 }
