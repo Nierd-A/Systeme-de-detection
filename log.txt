@@ -7,3 +7,6 @@
 08/07/2021 10:05:04 Bruit detecte pendant une duree de 2.0 secondes
 08/07/2021 10:05:07 Bruit detecte pendant une duree de 2.0 secondes
 08/07/2021 14:17:21 Bruit detecte pendant une duree de 2.0 secondes
+08/07/2021 14:17:37 Presence detectee pendant une duree de 1625746656.34 secondes
+08/07/2021 14:17:37 Bruit detecte pendant une duree de 1625746656.34 secondes
+08/07/2021 14:18:52 Bruit detecte pendant une duree de 2.0 secondes
