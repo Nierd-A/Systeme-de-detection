@@ -5,6 +5,7 @@ import math
 import RPi.GPIO as GPIO
 from time import strftime
 import datetime
+import subprocess
 
 # Declaration des fonctions
 
@@ -43,6 +44,10 @@ def capteur_son (GPIO_RX,start):
 
 
 #MAIN
+print("Setup ...")
+#lancement du setup d'enregistrement des log
+subprocess.call(["bash","setup_auto_log.sh"])
+
 GPIO.setmode(GPIO.BCM)
 
 RX = 15 #reciever
@@ -70,7 +75,11 @@ try:
 except KeyboardInterrupt:
 	print("KeyboardInterrupt has been caught.")
 	GPIO.cleanup()
- 
+        
+        #enregistrement des eventuelles derniers logs
+        subprocess.call(["bash","auto_log.sh"])
+        #suppression de l'enregistrement automatique
+        subprocess.call(["bash","setup_auto_log.sh","-r"]) 
  
 
 
