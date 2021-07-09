@@ -1,3 +1,27 @@
+class Seq_item {
+  private:
+    int* leds;
+    int duree; 
+    int size_l;
+
+  public:
+    Seq_item(int* l, int d, int s){
+      leds = l;
+      duree = d;
+      size_l = s;
+    }
+    int* getLeds(){
+      return leds;
+    }
+    int getDuree() {
+      return duree;
+    }
+    int getSize() {
+      return size_l;
+    }
+};
+
+
 //déclaration des variables
 //variables liées aux broches
 int led_R1 = 12;
@@ -8,20 +32,52 @@ int led_V1 = 8;
 int led_V2 = 7;
 int capt_Son = 5;
 int RX = 0;  
-int TX = 1; 
+int TX = 1;
+
+int no_led = -1;
+int delai = 10; //en millisecondes
 
 //variable de récupération des broches input
-int val_Capt_Son, val_RX;
+int val_Capt_Son, val_RX, old_Capt_Son, old_RX;
 
 //variable lié au temps d'écoute des broches
-int temporisation;
+int temporisation=0;
 
 //valeur de detection des capteurs
 int detection = 0, non_detection =1;
 
+const int size_seq_son = 2;
+int seq_son_1[2] = {led_R1,led_R2};
+int seq_son_2[2] = {led_V1,led_V2};
+Seq_item seq_son[size_seq_son] = {Seq_item(seq_son_1,250,2),Seq_item(seq_son_2,250,2)};
+
+const int size_seq_wait = 7;
+int seq_wait_1[1] = {led_V2};
+int seq_wait_2[1] = {led_V1};
+int seq_wait_3[1] = {led_J2};
+int seq_wait_4[1] = {led_J1};
+int seq_wait_5[1] = {led_R2};
+int seq_wait_6[1] = {led_R1};
+int seq_wait_7[1] = {no_led};
+
+Seq_item seq_wait[size_seq_wait] = {
+  Seq_item(seq_wait_1,50,1),
+  Seq_item(seq_wait_2,50,1),
+  Seq_item(seq_wait_3,50,1),
+  Seq_item(seq_wait_4,50,1),
+  Seq_item(seq_wait_5,50,1),
+  Seq_item(seq_wait_6,50,1),
+  Seq_item(seq_wait_7,500,1)
+};
+
+Seq_item* current_seq = seq_wait;
+Seq_item* previous_seq = seq_wait;
+Seq_item current_seq_step = seq_wait[0];
+Seq_item previous_seq_step = seq_wait[6];
+int current_size = size_seq_wait,current_step = 0;
 void setup() {
   // initialisation des leds et des broches de capteurs
-
+  
   //output
   pinMode(led_R1, OUTPUT); //rouge
   pinMode(led_R2, OUTPUT);
@@ -34,10 +90,49 @@ void setup() {
   //input
   pinMode(capt_Son, INPUT);  //capteur de son
   pinMode(RX, INPUT); //RX : Capteur de presence
+
+  old_Capt_Son = digitalRead(capt_Son);
+  old_RX = digitalRead(RX);
 }
 
+void loop() {
+  //lecture capteur
+  val_Capt_Son = digitalRead(capt_Son);
+  val_RX = digitalRead(RX);
+
+  //changement d'état
+  
+  //changement de sequence selon les evenements
+  //changement d'etape selon le temps passé
+  if(temporisation >= current_seq_step.getDuree()) {
+    previous_seq_step = current_seq_step;
+    current_step = (current_step + 1) % current_size;
+    current_seq_step = current_seq[current_step];
+    temporisation = 0;
+  }
+
+  //affichage de l'état
+  if(previous_seq_step.getLeds()[0] != no_led ){
+    //exctinction de la sequence precedente
+    for(int i = 0; i < previous_seq_step.getSize(); i++) {
+      digitalWrite(previous_seq_step.getLeds()[i],LOW);
+    }
+  }
+  //allumage de la sequence courante
+  if(current_seq_step.getLeds()[0] != no_led ){
+    //exctinction de la sequence precedente
+    for(int i = 0; i < current_seq_step.getSize(); i++) {
+      digitalWrite(current_seq_step.getLeds()[i],HIGH);
+    }
+  }
+  temporisation += delai;
+  delay(delai);
+}
+// OLD_V1
+/*
 // Boucle d'écoute des événements
 void loop() {
+  
   //écoute des broches input pendant 500 millisecondes 
   //ET tant qu'un capteur ne change pas de valeur
   temporisation = 0;
@@ -66,6 +161,8 @@ void loop() {
     sequence_attente();    
   }
 }
+
+
 
 // Extinction de toutes les DEL
 void extinction() {  
@@ -122,6 +219,8 @@ void sequence_presence() {
   }
 }
 
+
+
 //Fonction de sequence de led dédié au capteur de son
 void sequence_son() {
   extinction();
@@ -159,3 +258,4 @@ void sequence_attente(){
     digitalWrite (i, LOW) ; // éteint la DEL
   }
 }
+*/
