@@ -41,16 +41,54 @@ int delai = 10; //en millisecondes
 int val_Capt_Son, val_RX, old_Capt_Son, old_RX;
 
 //variable lié au temps d'écoute des broches
-int temporisation=0;
+int temporisation = 0;
 
 //valeur de detection des capteurs
-int detection = 0, non_detection =1;
+int detection = 0, non_detection = 1;
 
+//sequence de led lors d'un evenement sur rx
+const int size_seq_rx = 20;
+int seq_rx_1[2] = {led_J1,led_J2};
+int seq_rx_2[1] = {no_led};
+int seq_rx_3[2] = {led_V1,led_V2};
+int seq_rx_4[1] = {no_led};
+int seq_rx_5[2] = {led_R1,led_R2};
+int seq_rx_6[1] = {no_led};
+int seq_rx_7[2] = {led_V1,led_V2};
+int seq_rx_8[1] = {no_led};
+Seq_item seq_rx[size_seq_rx] = {
+  Seq_item(seq_rx_1,500,2),
+  Seq_item(seq_rx_2,500,1),
+  Seq_item(seq_rx_1,500,2),
+  Seq_item(seq_rx_2,500,1),
+  Seq_item(seq_rx_1,500,2),
+  Seq_item(seq_rx_2,500,1),
+  Seq_item(seq_rx_1,500,2),
+  Seq_item(seq_rx_2,500,1),
+  Seq_item(seq_rx_1,500,2),
+  Seq_item(seq_rx_2,500,1),
+  Seq_item(seq_rx_3,500,2),
+  Seq_item(seq_rx_4,500,1),
+  Seq_item(seq_rx_3,500,2),
+  Seq_item(seq_rx_4,500,1),
+  Seq_item(seq_rx_5,500,2),
+  Seq_item(seq_rx_6,500,1),
+  Seq_item(seq_rx_5,500,2),
+  Seq_item(seq_rx_6,500,1),
+  Seq_item(seq_rx_7,500,2),
+  Seq_item(seq_rx_8,500,1),
+};
+
+//sequence de led lors d'un evenement sonore
 const int size_seq_son = 2;
 int seq_son_1[2] = {led_R1,led_R2};
 int seq_son_2[2] = {led_V1,led_V2};
-Seq_item seq_son[size_seq_son] = {Seq_item(seq_son_1,250,2),Seq_item(seq_son_2,250,2)};
+Seq_item seq_son[size_seq_son] = {
+  Seq_item(seq_son_1,250,2),
+  Seq_item(seq_son_2,250,2)
+};
 
+//sequence des led en attente d'un evenement
 const int size_seq_wait = 7;
 int seq_wait_1[1] = {led_V2};
 int seq_wait_2[1] = {led_V1};
@@ -70,11 +108,14 @@ Seq_item seq_wait[size_seq_wait] = {
   Seq_item(seq_wait_7,500,1)
 };
 
+//variable de stockage de l'etat du systeme + initalisation
 Seq_item* current_seq = seq_wait;
 Seq_item* previous_seq = seq_wait;
 Seq_item current_seq_step = seq_wait[0];
 Seq_item previous_seq_step = seq_wait[6];
 int current_size = size_seq_wait,current_step = 0;
+int leds_done = 0;
+
 void setup() {
   // initialisation des leds et des broches de capteurs
   
@@ -99,163 +140,58 @@ void loop() {
   //lecture capteur
   val_Capt_Son = digitalRead(capt_Son);
   val_RX = digitalRead(RX);
-
-  //changement d'état
+  //envoie de la detection du son au RPi
+  digitalWrite(TX,HIGH*(1-val_RX));
   
   //changement de sequence selon les evenements
+  // remise a zero si changement
+  if(val_RX == detection && current_seq != seq_rx) {
+    previous_seq_step = current_seq_step;
+    current_seq = seq_rx;
+    current_size = size_seq_rx;
+    temporisation = current_step = 0;
+    current_seq_step = current_seq[current_step];
+  } else if(val_Capt_Son == detection && current_seq != seq_son) {
+    previous_seq_step = current_seq_step;
+    current_seq = seq_son;
+    current_size = size_seq_son;
+    temporisation = current_step = 0;
+    current_seq_step = current_seq[current_step];
+  } else if(current_seq != seq_wait && val_Capt_Son == val_RX == non_detection) {
+    previous_seq_step = current_seq_step;
+    current_seq = seq_wait;
+    current_size = size_seq_wait;
+    temporisation = current_step = 0;
+    current_seq_step = current_seq[current_step];
+  }
+  
+  
   //changement d'etape selon le temps passé
   if(temporisation >= current_seq_step.getDuree()) {
     previous_seq_step = current_seq_step;
     current_step = (current_step + 1) % current_size;
     current_seq_step = current_seq[current_step];
-    temporisation = 0;
+    temporisation = leds_done = 0;
   }
 
-  //affichage de l'état
-  if(previous_seq_step.getLeds()[0] != no_led ){
-    //exctinction de la sequence precedente
-    for(int i = 0; i < previous_seq_step.getSize(); i++) {
-      digitalWrite(previous_seq_step.getLeds()[i],LOW);
+  //mise à jour des leds si besoin
+  if(leds_done == 0) {
+    if(previous_seq_step.getLeds()[0] != no_led ){
+      //exctinction de la sequence precedente
+      for(int i = 0; i < previous_seq_step.getSize(); i++) {
+        digitalWrite(previous_seq_step.getLeds()[i],LOW);
+      }
     }
-  }
-  //allumage de la sequence courante
-  if(current_seq_step.getLeds()[0] != no_led ){
-    //exctinction de la sequence precedente
-    for(int i = 0; i < current_seq_step.getSize(); i++) {
-      digitalWrite(current_seq_step.getLeds()[i],HIGH);
+    //allumage de la sequence courante
+    if(current_seq_step.getLeds()[0] != no_led ){
+      //exctinction de la sequence precedente
+      for(int i = 0; i < current_seq_step.getSize(); i++) {
+        digitalWrite(current_seq_step.getLeds()[i],HIGH);
+      }
     }
+    leds_done = 1;
   }
+  
   temporisation += delai;
   delay(delai);
 }
-// OLD_V1
-/*
-// Boucle d'écoute des événements
-void loop() {
-  
-  //écoute des broches input pendant 500 millisecondes 
-  //ET tant qu'un capteur ne change pas de valeur
-  temporisation = 0;
-  val_Capt_Son = digitalRead(capt_Son);
-  val_RX = digitalRead(RX);
-  while(temporisation < 500 && val_Capt_Son == non_detection && val_RX == non_detection) {
-    //lecture des broches toutes les 10 millisecondes
-    val_Capt_Son = digitalRead(capt_Son);
-    val_RX = digitalRead(RX);
-    delay(10);
-    temporisation += 10;
-  }
-  
-  //action selon les broches
-  if (val_RX == detection)
-  {
-    sequence_presence();      
-  }  
-
-  else if (val_Capt_Son == detection)
-  {
-    sequence_son();    
-  }    
-
-  else {
-    sequence_attente();    
-  }
-}
-
-
-
-// Extinction de toutes les DEL
-void extinction() {  
-  for (byte i = 7 ; i <= 12 ; i++) {
-    digitalWrite (i, LOW) ; // éteint la DEL reliée à la broche i
-  }
-}
-
-// Fonction de sequence de led dédié au capteur de presence
-// Les durées ont été imposées et sont calculées selon
-// -> la somme des délais d'une boucle * le nombre de boucle
-void sequence_presence() {
-  extinction();
-  
-  // 5 seconde de clignotement leds jaunes
-  for (int cmp = 0 ; cmp < 10 ; cmp++){      
-      digitalWrite(led_J1, HIGH);
-      digitalWrite(led_J2, HIGH);
-      delay (250);
-      digitalWrite(led_J1, LOW);
-      digitalWrite(led_J2, LOW);
-      delay (250);
-  }
-  // 5 seconde de clignotement leds verte et rouge avec 2 seconde d'intervalle
-  //durée = 2 secondes
-  for (int cmp = 0 ; cmp < 4 ; cmp++){
-      
-      digitalWrite(led_V1, HIGH);
-      digitalWrite(led_V2, HIGH);
-      delay (250);
-      digitalWrite(led_V1, LOW);
-      digitalWrite(led_V2, LOW);
-      delay (250);
-  }
-  //durée = 2 secondes
-  for (int cmp = 0 ; cmp < 4 ; cmp++){
-      
-      digitalWrite(led_R1, HIGH);
-      digitalWrite(led_R2, HIGH);
-      delay (250);
-      digitalWrite(led_R1, LOW);
-      digitalWrite(led_R2, LOW);
-      delay (250);
-  }
-  //durée = 1 secondes
-  for (int cmp = 0 ; cmp < 2 ; cmp++){
-      
-      digitalWrite(led_V1, HIGH);
-      digitalWrite(led_V2, HIGH);
-      delay (250);
-      digitalWrite(led_V1, LOW);
-      digitalWrite(led_V2, LOW);
-      delay (250);
-  }
-}
-
-
-
-//Fonction de sequence de led dédié au capteur de son
-void sequence_son() {
-  extinction();
-  
-  // On informe au RPi qu'un son se produit
-  digitalWrite(TX, HIGH);
-  
-  //Clignotement de 2 secondes
-  for(int cmp=0; cmp < 4;cmp++) {
-  // Leds rouges et vertes clignotes
-  digitalWrite(led_V1, LOW);
-  digitalWrite(led_V2, LOW);
-  digitalWrite(led_R1, HIGH);
-  digitalWrite(led_R2, HIGH);
-  delay (250);
-  digitalWrite(led_R1, LOW);
-  digitalWrite(led_R2, LOW);
-  digitalWrite(led_V1, HIGH);
-  digitalWrite(led_V2, HIGH);
-  delay (250);
-  
-  }
-  //On informe au RPi qu'il n'y a plus de son
-  digitalWrite(TX, LOW);
-}
-
-//Fonction de sequence de led dédié à l'attente d'événements
-void sequence_attente(){  
-  extinction();
- 
-  // Boucle pour faire flasher les DEL
-  for (byte i = 7 ; i <= 12 ; i++) {
-    digitalWrite (i, HIGH) ; // allume la DEL sur broche i
-    delay (50) ; // durée du flash 50 millisecondes
-    digitalWrite (i, LOW) ; // éteint la DEL
-  }
-}
-*/
