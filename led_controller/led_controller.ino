@@ -151,7 +151,7 @@ void loop() {
   val_Capt_Son = digitalRead(capt_Son);
   val_RX = digitalRead(RX);
   //envoie de la detection du son au RPi
-  digitalWrite(TX,HIGH*(1-capt_Son));
+  digitalWrite(TX,HIGH*(1-val_Capt_Son));
   
   //changement de sequence selon les evenements
   // remise a zero si changement
