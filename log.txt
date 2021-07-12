@@ -2271,3 +2271,11 @@
 12/07/2021 15:49:47 Presence detectee pendant une duree de 0.0 secondes
 12/07/2021 15:49:47 Presence detectee pendant une duree de 0.0 secondes
 12/07/2021 15:49:58 Presence detectee pendant une duree de 11.33 secondes
+12/07/2021 15:50:04 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:50:05 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:50:05 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:50:06 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:50:09 Presence detectee pendant une duree de 0.0 secondes
+12/07/2021 15:50:14 Presence detectee pendant une duree de 5.28 secondes
+12/07/2021 15:51:00 Bruit detecte pendant une duree de 0.03 secondes
+12/07/2021 15:51:01 Bruit detecte pendant une duree de 0.01 secondes
