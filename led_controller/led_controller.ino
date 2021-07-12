@@ -1,3 +1,7 @@
+// classe permettant de creer des sequences d'affichage de leds en fonction d'une duree
+// leds : tableau de liste des leds à afficher
+// duree : duree d'affichage en milliseconde
+// size_l : taille de la liste de leds
 class Seq_item {
   private:
     int* leds;
@@ -21,8 +25,8 @@ class Seq_item {
     }
 };
 
+// --- declaration des variables ---
 
-//déclaration des variables
 //variables liées aux broches
 int led_R1 = 12;
 int led_R2 = 11;
@@ -33,19 +37,10 @@ int led_V2 = 7;
 int capt_Son = 5;
 int RX = 0;  
 int TX = 1;
-
+// indication d'une sequence sans led
 int no_led = -1;
-int delai = 10; //en millisecondes
 
-//variable de récupération des broches input
-int val_Capt_Son, val_RX, old_Capt_Son, old_RX;
-
-//variable lié au temps d'écoute des broches
-int temporisation = 0;
-
-//valeur de detection des capteurs
-int detection = 0, non_detection = 1;
-
+// --- creation des differentes séquences d'affichage ---
 //sequence de led lors d'un evenement sur rx
 const int size_seq_rx = 20;
 int seq_rx_1[2] = {led_J1,led_J2};
@@ -108,14 +103,31 @@ Seq_item seq_wait[size_seq_wait] = {
   Seq_item(seq_wait_7,500,1)
 };
 
-//variable de stockage de l'etat du systeme + initalisation
+// --- variable de stockage de l'etat du systeme + initalisation ---
+//sequence initiale = en attente
 Seq_item* current_seq = seq_wait;
 Seq_item* previous_seq = seq_wait;
 Seq_item current_seq_step = seq_wait[0];
 Seq_item previous_seq_step = seq_wait[6];
-int current_size = size_seq_wait,current_step = 0;
+//taille de la sequence initiale
+int current_size = size_seq_wait;
+// etape initale de la premiere sequence
+int current_step = 0;
+//variable d'indication de mise à jour des leds
 int leds_done = 0;
+//variable lié au temps d'écoute des broches
+int temporisation = 0;
 
+//duree d'une boucle 
+int delai = 10; //en millisecondes
+
+//variable de récupération des broches input
+int val_Capt_Son, val_RX;
+
+//valeur de detection des capteurs
+int detection = 0, non_detection = 1;
+
+// --- Setup arduino ---
 void setup() {
   // initialisation des leds et des broches de capteurs
   
@@ -131,11 +143,9 @@ void setup() {
   //input
   pinMode(capt_Son, INPUT);  //capteur de son
   pinMode(RX, INPUT); //RX : Capteur de presence
-
-  old_Capt_Son = digitalRead(capt_Son);
-  old_RX = digitalRead(RX);
 }
 
+// --- Loop arduino ---
 void loop() {
   //lecture capteur
   val_Capt_Son = digitalRead(capt_Son);
@@ -146,23 +156,11 @@ void loop() {
   //changement de sequence selon les evenements
   // remise a zero si changement
   if(val_RX == detection && current_seq != seq_rx) {
-    previous_seq_step = current_seq_step;
-    current_seq = seq_rx;
-    current_size = size_seq_rx;
-    temporisation = current_step = leds_done = 0;
-    current_seq_step = current_seq[current_step];
+    change_state(temporisation,current_step,leds_done,previous_seq_step,current_seq_step,current_seq,seq_rx,current_size,size_seq_rx);
   } else if(val_Capt_Son == detection && current_seq != seq_son) {
-    previous_seq_step = current_seq_step;
-    current_seq = seq_son;
-    current_size = size_seq_son;
-    temporisation = current_step = leds_done = 0;
-    current_seq_step = current_seq[current_step];
+    change_state(temporisation,current_step,leds_done,previous_seq_step,current_seq_step,current_seq,seq_son,current_size,size_seq_son);
   } else if(current_seq != seq_wait && val_Capt_Son == val_RX == non_detection) {
-    previous_seq_step = current_seq_step;
-    current_seq = seq_wait;
-    current_size = size_seq_wait;
-    temporisation = current_step = leds_done = 0;
-    current_seq_step = current_seq[current_step];
+    change_state(temporisation,current_step,leds_done,previous_seq_step,current_seq_step,current_seq,seq_wait,current_size,size_seq_wait);
   }
   
   
@@ -196,3 +194,15 @@ void loop() {
   delay(delai);
 
 } 
+
+//Fonction de changement d'état du système
+//les variables par référence sont les variables du système
+//celles qui ne sont pas par références indiquent l'état suivant à changer 
+//soit next_seq et next_size_seq
+void change_state(int &temporisation,int &current_step,int &leds_done,Seq_item &previous_seq_step,Seq_item &current_seq_step,Seq_item* &current_seq,Seq_item* next_seq,int &current_size,int next_size_seq) {
+  previous_seq_step = current_seq_step;
+  current_seq = next_seq;
+  current_size = next_size_seq;
+  temporisation = current_step = leds_done = 0;
+  current_seq_step = current_seq[current_step];
+}
