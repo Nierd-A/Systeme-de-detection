@@ -2251,3 +2251,12 @@
 12/07/2021 15:44:22 Bruit detecte pendant une duree de 0.01 secondes
 12/07/2021 15:44:22 Bruit detecte pendant une duree de 0.01 secondes
 12/07/2021 15:45:00 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:04 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:04 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:35 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:35 Bruit detecte pendant une duree de 0.02 secondes
+12/07/2021 15:45:36 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:36 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:36 Bruit detecte pendant une duree de 0.01 secondes
+12/07/2021 15:45:36 Bruit detecte pendant une duree de 0.03 secondes
+12/07/2021 15:45:37 Bruit detecte pendant une duree de 0.01 secondes
