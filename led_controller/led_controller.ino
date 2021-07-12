@@ -149,19 +149,19 @@ void loop() {
     previous_seq_step = current_seq_step;
     current_seq = seq_rx;
     current_size = size_seq_rx;
-    temporisation = current_step = 0;
+    temporisation = current_step = leds_done = 0;
     current_seq_step = current_seq[current_step];
   } else if(val_Capt_Son == detection && current_seq != seq_son) {
     previous_seq_step = current_seq_step;
     current_seq = seq_son;
     current_size = size_seq_son;
-    temporisation = current_step = 0;
+    temporisation = current_step = leds_done = 0;
     current_seq_step = current_seq[current_step];
   } else if(current_seq != seq_wait && val_Capt_Son == val_RX == non_detection) {
     previous_seq_step = current_seq_step;
     current_seq = seq_wait;
     current_size = size_seq_wait;
-    temporisation = current_step = 0;
+    temporisation = current_step = leds_done = 0;
     current_seq_step = current_seq[current_step];
   }
   
@@ -194,5 +194,5 @@ void loop() {
   
   temporisation += delai;
   delay(delai);
-  
+
 } 
