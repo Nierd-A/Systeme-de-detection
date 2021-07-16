@@ -77,3 +77,6 @@
 16/07/2021 11:02:29 Bruit detecte pendant une duree de 2.0 secondes
 16/07/2021 11:02:32 Bruit detecte pendant une duree de 2.0 secondes
 16/07/2021 11:02:34 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 11:03:10 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 11:03:13 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 11:03:24 Bruit detecte pendant une duree de 2.0 secondes
