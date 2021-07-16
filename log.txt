@@ -120,3 +120,11 @@
 16/07/2021 14:06:28 Bruit detecte pendant une duree de 2.0 secondes
 16/07/2021 14:07:28 Bruit detecte pendant une duree de 2.0 secondes
 16/07/2021 14:19:39 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 14:20:26 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 14:20:28 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 14:20:33 Bruit detecte pendant une duree de 2.0 secondes
+16/07/2021 14:20:42 Presence detectee pendant une duree de 1.7 secondes
+16/07/2021 14:20:48 Presence detectee pendant une duree de 5.54 secondes
+16/07/2021 14:20:50 Presence detectee pendant une duree de 0.77 secondes
+16/07/2021 14:20:52 Presence detectee pendant une duree de 2.18 secondes
+16/07/2021 14:20:57 Presence detectee pendant une duree de 2.27 secondes
